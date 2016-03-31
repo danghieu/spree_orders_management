@@ -1,0 +1,16 @@
+<script type='text/template' id='variant_autocomplete_template'>
+  <div class='variant-autocomplete-item media'>
+    <figure class='variant-image media-left'>
+      {{#if variant.image }}
+        <img src='{{variant.image}}' class="thumbnail no-marginb" />
+      {{ else }}
+        <img src='<%= image_path("noimage/mini.png") %>' class="thumbnail no-marginb" />
+      {{/if}}
+    </figure>
+
+    <div class='variant-details media-body'>
+      <h5 class="variant-name media-heading">{{variant.name}}</h5>
+      <h5 class="variant-name media-heading">{{variant.dish_type_name}}</h5>
+    </div>
+  </div>
+</script>
