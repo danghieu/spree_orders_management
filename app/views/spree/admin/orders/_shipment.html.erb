@@ -12,11 +12,6 @@
       <% if shipment.ready? and can? :update, shipment %>
         <%= link_to Spree.t(:ship), 'javascript:;', class: 'ship pull-right btn btn-success', data: { 'shipment-number' => shipment.number } %>
         <div class='clearfix'></div>
-        <% elsif @order.shipment_state == "pending" and can? :update, shipment%>
-
-        <%=link_to Spree.t(:ready),ready_admin_order_url(@order),:class => "pull-right btn btn-success"  %>
-        <div class='clearfix'></div>
-
       <% end %>
     </h1>
   </div>
@@ -33,7 +28,60 @@
     <tbody data-shipment-number="<%= shipment.number %>" data-order-number="<%= order.number %>">
       <%= render 'spree/admin/orders/shipment_manifest', shipment: shipment %>
 
+      <% unless shipment.shipped? %>
+        <tr class="edit-method is-hidden total">
+          <td colspan="3">
+            <div class="field alpha five columns">
+              <%= label_tag 'selected_shipping_rate_id', Spree.t(:shipping_time) %>
+              <%= select_tag :selected_shipping_rate_id,
+                    options_for_select(shipment.shipping_rates.map {|sr| ["#{sr.name}", sr.id] }, shipment.selected_shipping_rate_id),
+                    { class: 'select2', data: {'shipment-number' => shipment.number } } %>
+            </div>
+          </td>
+          <td colspan="2">
+            <div class="field alpha five columns ">
+                <%= label_tag 'shipping_rate_date_delivery', Spree.t(:shipping_date) %>
+                <%= text_field :selected_shipping_rate_date_delivey,"", value: shipment.selected_shipping_rate.date_delivery, class: 'datepick form-control', id: shipment.number, data: {'shipment-number' => shipment.number }  %>    
+            </div>
+          </td>
+          <td class="actions text-center">
+            <% if can? :update, shipment %>
+              <%= link_to_with_icon 'cancel', Spree.t('actions.cancel'), "#", class: 'cancel-method btn btn-primary btn-sm', data: {action: 'cancel'}, title: Spree.t('actions.cancel'), no_text: true %>
+              <%= link_to_with_icon 'save', Spree.t('actions.save'), "#", class: 'save-method btn btn-success btn-sm', data: {'shipment-number' => shipment.number, action: 'save'}, title: Spree.t('actions.save'), no_text: true %>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+
+        <tr class="show-method total" style="text-align:center">
+          <% if rate = shipment.selected_shipping_rate %>
+            <td colspan="1">
+              <strong>Time Delivery</strong>
+            </td>
+            <td colspan="2">
+              <strong><%= rate.name %></strong>
+            </td>
+            <td colspan="2">
+              <strong><%= rate.date_delivery %></strong>
+            </td>
+          <% else %>
+            <td colspan='5'><%= Spree.t(:no_shipping_method_selected) %></td>
+          <% end %>
+
+          <td class="actions text-center">
+            <% if( (can? :update, shipment) and !shipment.shipped?) %>
+              <%= link_to_with_icon 'edit', Spree.t('edit'), "javascript:;", class: 'edit-method with-tip btn btn-sm btn-primary', data: {action: 'edit'}, no_text: true %>
+            <% end %>
+          </td>
+        </tr>
+
     </tbody>
   </table>
 
 </div>
+<script type="text/javascript">
+   $('.datepick').each(function(){
+    $(this).datepicker({ dateFormat: 'yy-mm-dd' });
+});
+
+</script>
