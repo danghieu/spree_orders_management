@@ -43,9 +43,9 @@
         <%== shipment.as_json(
           :root => false,
           :only => [
-            :id, :tracking, :number, :state, :stock_location_id
+            :id, :tracking, :number, :state, :stock_location_id, :date_delivery
           ], :include => [
-            :inventory_units, :stock_location
+            :inventory_units, :stock_location, :shipping_rates
           ]).to_json
         %>
       );

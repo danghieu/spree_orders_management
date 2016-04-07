@@ -5,3 +5,17 @@ the installer will append this file to the app vendored assets here: 'vendor/ass
 .media-heading {
     margin-top: 10px;
 }
+.ingredient {
+	background-color: #79E079;
+    float: left;
+    margin: 5px 10px 5px 0px;
+    border-radius: 10px;
+    width: 100px;;
+}
+.ingredient-img{
+	width: 45px;
+	height: 45px;
+	border-radius: 45px
+}
+
+table .th .tr{ text-align: center;}

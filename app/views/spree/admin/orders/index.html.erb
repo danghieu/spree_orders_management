@@ -1,7 +1,9 @@
 <% content_for :page_title do %>
   <%= plural_resource_name(Spree::Order) %>
 <% end %>
-
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:fulfillment_list), fulfillment_list_admin_orders_url, :class => "btn-primary", :icon => 'list', :id => 'fulfillment_listadmin_order' %>
+<% end  %>
 <% content_for :page_actions do %>
   <%= button_link_to Spree.t(:new_order), new_admin_order_url, :class => "btn-success", :icon => 'add', :id => 'admin_new_order' %>
 <% end if can? :create, Spree::Order %>
@@ -104,7 +106,6 @@
     <% end %>
 
   </div>
-
 <% end %>
 
 <%= render :partial => 'spree/admin/shared/index_table_options', :locals => { :collection => @orders } %>

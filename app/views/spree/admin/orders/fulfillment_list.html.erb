@@ -1,0 +1,35 @@
+<% content_for :page_title do %>
+  <%= link_to plural_resource_name(Spree::Order), admin_orders_url %>
+  / <%=Spree.t(:fulfillment_list_on_tomorrow) %>
+<% end %>
+<table class="table" id="listing_products">
+  <thead>
+    <tr data-hook="admin_products_index_headers">
+      <th class="col-md-1">Image</th>
+      <th class="col-md-3">Name</th>
+      <th class="col-md-1">Dish Type</th>
+      <th class="col-md-1">Quantity</th>
+      <th class="col-md-6">Ingredients</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @products.each do |product| %>
+        <tr  id="" data-hook="admin_products_index_rows" class="<%= cycle('odd', 'even') %>">
+          <td class="image"><%= mini_image product[:product] %></td>
+          <td><%= link_to product[:product].try(:name), edit_admin_product_path(product[:product]) %>
+          <td><%= link_to product[:product].dish_type.try(:name), edit_admin_dish_type_path(product[:product].dish_type) %></td>
+          <td><%=product[:quantity] %></td>
+          <td>
+           	<% product[:product].ingredients.each do |ingredient| %>
+           		<%if ingredient.images.any? %>
+              <div class="ingredient">
+                <img  class = "ingredient-img"src="<%=ingredient.images.first.attachment.url(:mini) %>" alt="<%=ingredient.name%>">  <%= ingredient.name%>
+              </div>
+          			
+          		<%end %>
+          	<%end %>
+          </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
