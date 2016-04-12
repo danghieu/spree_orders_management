@@ -4,7 +4,7 @@
 // spree/app/assets/javascripts/spree/backend/shipment.js
 
 $(document).ready(function () {
-  $('[data-hook=admin_shipment_form] a.save-method').on('click', function (event) {
+  $('[data-hook=admin_shipment_form] a.save-method1').on('click', function (event) {
     event.preventDefault();
 
     var link = $(this);
