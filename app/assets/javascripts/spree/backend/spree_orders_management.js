@@ -1,7 +1,8 @@
 // Placeholder manifest file.
 // the installer will append this file to the app vendored assets here: vendor/assets/javascripts/spree/backend/all.js'
 // handle shipping method save
-  $('[data-hook=admin_shipment_form] a.save-method').on('click', function (event) {
+$(document).ready(function () {
+  $('[data-hook=admin_shipment_form1] a.save-method').on('click', function (event) {
     event.preventDefault();
 
     var link = $(this);
@@ -28,3 +29,4 @@
       console.log(msg);
     });
   });
+});
