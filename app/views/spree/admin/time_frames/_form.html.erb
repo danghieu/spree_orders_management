@@ -1,0 +1,20 @@
+
+<div class="col-md-6" data-hook="admin_currency_form">
+
+  <div class="col-md-12" data-hook="admin_currency_form_name">
+    <%= f.field_container :name, class: ['form-group'] do %>
+      <%= f.label :name, raw(Spree.t(:name) + content_tag(:span, ' *', class: 'required')) %>
+      <%= f.text_field :name,name: "time_frame[name]",  class: 'form-control title' %>
+      <%= f.error_message_on :name %>
+    <% end %>
+  </div>
+
+   <div class="col-md-12" data-hook="admin_currency_form_description">
+        <%= f.field_container :description, class: ['form-group'] do %>
+          <%= f.label :description, Spree.t(:description) %>
+          <%= text_area :time_frame, :description,  { rows: 5, class: 'form-control' } %>
+          <%= f.error_message_on :description %>
+        <% end %>
+  </div>
+
+</div> <!--- end admin_currency_form-->

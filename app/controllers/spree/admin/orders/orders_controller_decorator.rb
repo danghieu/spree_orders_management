@@ -1,4 +1,5 @@
 Spree::Admin::OrdersController.class_eval do
+  before_action :load_data, only: [:fulfillment_list]
   def ready
     @order = Spree::Order.friendly.find(params[:id])
     @order.shipment_state = "ready"
@@ -12,10 +13,40 @@ Spree::Admin::OrdersController.class_eval do
     authorize! action, @order
   end
 
+  def load_data
+    @time = Dish::TimeFrame.all
+    @date =  Date.today
+    @s_m = @time.first
+  end
+
   def fulfillment_list
-    tomorow =  Date.today + 1
+    if params[:fulfillment].present? && fulfill_params[:date].present? &&fulfill_params[:time].present?
+      @date =  fulfill_params[:date]
+      @s_m  =  Dish::TimeFrame.find(fulfill_params[:time])
+      if request.get?
+        @ready 	 =  get_fulfillment_data(@date,@s_m,'ready')
+        @shipped =  get_fulfillment_data(@date,@s_m, 'shipped')
+      else #request.post?
+        @shipments = get_shipments(@date,@s_m,'ready')
+        @shipments.each do |shipment|
+          unless shipment.shipped?
+            shipment.ship!
+          end
+        end
+        @ready 	 =  get_fulfillment_data(@date,@s_m,'ready')
+       	@shipped =  get_fulfillment_data(@date,@s_m, 'shipped')
+      end
+    else
+      @ready = get_fulfillment_data(Date.today,@time.first,'ready')
+      @shipped = get_fulfillment_data(Date.today,@time.first,'shipped')
+    end
+    
+
+  end
+
+  def get_fulfillment_data(date,time,state)
     @products=[]
-    @shipments = Spree::Shipment.where(date_delivery: tomorow).includes( inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]])
+    @shipments = get_shipments(date,time,state)
     @shipments.each do |shipment|
       shipment.manifest.each do |ma|
         product= ma.variant.product
@@ -25,7 +56,7 @@ Spree::Admin::OrdersController.class_eval do
           flash = true
           unless @products.empty?
             @products.each do|p|
-              if p[:product].id == product.id 
+              if p[:product].id == product.id
                 p[:quantity] +=dish[:quantity]
                 flash =false
               end
@@ -38,5 +69,14 @@ Spree::Admin::OrdersController.class_eval do
       end
     end
     @products.sort_by { |a| a[:product].name }
+  end
+
+  def get_shipments(date,time,state)
+    @shipments = Spree::Shipment.where("time_frame_id=? and date_delivery=? and state= ?",time.id,date,state).includes( inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]])
+  end
+
+  private
+  def fulfill_params
+    params.require(:fulfillment).permit(:date,:time)
   end
 end

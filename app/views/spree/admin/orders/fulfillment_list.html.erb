@@ -1,7 +1,26 @@
 <% content_for :page_title do %>
   <%= link_to plural_resource_name(Spree::Order), admin_orders_url %>
-  / <%=Spree.t(:fulfillment_list_on_tomorrow) %>
+  / <%=Spree.t(:fulfillment_list) %>
 <% end %>
+<% after_tomorrow = Date.tomorrow+1 %>
+
+<%= form_for "fulfillment", url: fulfillment_list_admin_orders_url, method: 'POST', html: { id: "fulfillment_list", multipart: true } do |f|%>
+
+<div class ="fulfillment-tools">
+  <div class="fulfillment-action col-md-3">
+    <div class="form-group col-md-12">
+      <%= select_tag "fulfillment[date]",options_for_select([["Today", Date.today],["Tomorrow", Date.tomorrow],["The day after tomorrow",  after_tomorrow]], @date ),:class => ' form-control ',:data=>@date%>
+    </div>
+        </div>
+
+  <div class="fulfillment-filter col-md-3">
+      <div class="form-group col-md-12">
+        <%= f.collection_select "time", @time, :id, :name, {:include_blank => false,:selected => @s_m.id.to_i},  {:class => 'form-control',:data=>@s_m.id.to_i} %>
+      </div>
+  </div>
+  <a class="btn btn-success" id="btn-fulfillment-filter" href="/admin/orders/fulfillment_list">APPLY</a>
+</div>
+<% if @ready.any? %>
 <table class="table" id="listing_products">
   <thead>
     <tr data-hook="admin_products_index_headers">
@@ -13,7 +32,8 @@
     </tr>
   </thead>
   <tbody>
-    <% @products.each do |product| %>
+
+    <% @ready.each do |product| %>
         <tr  id="" data-hook="admin_products_index_rows" class="<%= cycle('odd', 'even') %>">
           <td class="image"><%= mini_image product[:product] %></td>
           <td><%= link_to product[:product].try(:name), edit_admin_product_path(product[:product]) %>
@@ -32,4 +52,42 @@
         </tr>
     <% end %>
   </tbody>
-</table>
+</table> 
+    <%= submit_tag 'Ship', name: 'Ship',  :class => "btn btn-success", data: { confirm: "Are you sure?" }%>
+  <% end %>
+
+   <% if @shipped.any? %>
+
+        <div id="product-shipped">
+         <li><h4> Shipped:</h4></li>
+          <ul>
+           <% @shipped.each do |product| %>
+            <li>  
+              <%= link_to edit_admin_product_path(product[:product]) do %> 
+              <%=product[:product].name%>
+              <span class="badge green"><%= product[:quantity]%></span>
+              <% end %>
+            </li>
+          <% end %>      
+          </ul>
+        </div>
+  <% end %>
+<% end %>
+<script type="text/javascript">
+  var date = $('#fulfillment_date').attr("data");
+  var s_m = $('#fulfillment_time').attr("data");
+  var href = "/admin/orders/fulfillment_list";
+  console.log(s_m);
+  $('#fulfillment_date').on('change', function() {
+    date =this.value;
+    href = "/admin/orders/fulfillment_list?fulfillment[date]="+date +"&fulfillment[time]="+s_m;
+    $("#btn-fulfillment-filter").attr("href", href);
+  });
+  $('#fulfillment_time').on('change', function() {
+    s_m =this.value;
+    href = "/admin/orders/fulfillment_list?fulfillment[date]="+date +"&fulfillment[time]="+s_m;    
+    $("#btn-fulfillment-filter").attr("href", href);
+  });
+
+
+</script>

@@ -1,0 +1,22 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:time_frames), admin_time_frames_url %>
+  / New
+<% end 
+%>
+
+<%= form_for @time_frame, url: admin_time_frames_url(@time_frame), method: 'POST', html: { id: "new_time_frame_type", multipart: true } do |f|%>
+	<fieldset data-hook="new_time_frame_type">
+		<%= render :partial => 'form', :locals => { :f => f } %>
+
+		<div class="form-actions" data-hook="buttons">
+		  <%= button Spree.t('actions.create'), 'ok', 'submit', {class: 'btn-success'} %>
+		  <span class="or"><%= Spree.t(:or) %></span>
+		  <%= button_link_to Spree.t('actions.cancel'), admin_time_frames_url, :icon => 'remove' %>
+		</div>
+	</fieldset>
+<% end %>
+
+
+
+
+

@@ -1,0 +1,29 @@
+<% content_for :page_title do %>
+  <%= Spree.t(:time_frames) %>
+<% end %>
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t(:new_time_frame), new_admin_time_frame_url, { :class => "btn-success", :icon => 'plus', :id => 'admin_new_dish_type' } %>
+<% end if can?(:create, :Currency) %>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th class="col-md-4"><%= Spree.t(:name) %></th>
+      <th class="col-md-4">Tools</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @time_frames.each do |time_frame| %>
+      <tr>
+        <td ><%= time_frame.name %></td>
+        <td class="actions" data-hook="admin_products_index_row_actions">
+            <%= link_to_edit time_frame, :no_text => true, :class => 'edit' if can?(:edit, time_frame) %>
+            &nbsp;
+            <%= link_to_delete time_frame, :no_text => true if can?(:delete, time_frame) %>
+          </tds>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+

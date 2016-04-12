@@ -1,8 +1,9 @@
 Spree::Core::Engine.routes.draw do
   namespace :admin do
+    resources :time_frames
     resources :orders do
       collection do
-        get 'fulfillment_list'
+        match 'fulfillment_list', via: [:get, :post]
       end
       member do
         get 'ready'

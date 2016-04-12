@@ -1,0 +1,17 @@
+<% content_for :page_title do %>
+  <%= link_to Spree.t(:time_frames), admin_time_frames_url %>
+  / <%=@time_frame.name %>
+<% end 
+%>
+
+<%= form_for @time_frame, method: :put, :url => admin_time_frame_url(@time_frame), :html => {:id => "edit_dish_type", :multipart => true} do |f| %>
+	<fieldset data-hook="edit_currency">
+		<%= render :partial => 'form', :locals => { :f => f } %>
+		<div class="form-buttons filter-actions actions" data-hook="buttons">
+	        <%= button Spree.t('actions.update'), 'ok' %>
+	        <span class="or"><%= Spree.t(:or) %></span>
+	        <%= link_to_with_icon 'remove', Spree.t('actions.cancel'), admin_time_frames_url, :class => 'button' %>
+	    </div>
+    </fieldset>
+<% end %>
+
