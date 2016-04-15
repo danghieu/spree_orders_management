@@ -1,4 +1,4 @@
-Spree::Admin::OrdersController.class_eval do
+Spree::Admin::PaymentsController.class_eval do
  def load_data
         @amount = params[:amount] || load_order.total
         @payment_methods = PaymentMethod.available_on_back_end
