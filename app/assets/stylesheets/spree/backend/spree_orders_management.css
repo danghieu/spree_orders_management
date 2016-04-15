@@ -60,6 +60,7 @@ table .th .tr{ text-align: center;}
 #product-shipped a {
   display: block;
   position: relative;
+  height:48px;
   line-height: 26px;
   font-size: 15px;
   font-weight: bold;
