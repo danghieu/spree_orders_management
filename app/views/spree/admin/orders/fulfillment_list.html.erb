@@ -64,11 +64,11 @@
            <% @shipped.each do |product| %>
             <li>  
               <%= link_to edit_admin_product_path(product[:product]) do %> 
-                <div>
+                
                   <%= mini_image product[:product]%>
 
                  <%= truncate(product[:product].name, escape: false,length: 10) %>
-                </div>
+                
                 
                 <span class="badge green"><%= product[:quantity]%></span>
               <% end %>
