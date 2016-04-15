@@ -9,7 +9,7 @@ Spree::Admin::OrdersController.class_eval do
   end
 
   def load_order
-    @order = Spree::Order.includes(:shipments =>[:stock_location,:shipping_rates => [:shipping_method],:inventory_units => [:line_item,:variant ]],:payments =>[:payment_method]).friendly.find(params[:id])
+    @order = Spree::Order.includes(:shipments =>[:time_frame,:stock_location,:shipping_rates,:inventory_units => [:line_item,:variant ]],:payments =>[:payment_method]).friendly.find(params[:id])
     authorize! action, @order
   end
 
@@ -72,7 +72,7 @@ Spree::Admin::OrdersController.class_eval do
   end
 
   def get_shipments(date,time,state)
-    @shipments = Spree::Shipment.where("time_frame_id=? and date_delivery=? and state= ?",time.id,date,state).includes( inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]])
+    @shipments = Spree::Shipment.where("time_frame_id=? and date_delivery=? and state= ?",time.id,date,state).includes(inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]])
   end
 
   private
