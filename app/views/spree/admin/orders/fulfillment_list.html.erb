@@ -57,32 +57,47 @@
   <% end %>
 
    <% if @shipped.any? %>
-
-        <div id="product-shipped">
-         <li><h4> Shipped:</h4></li>
-          <ul>
-           <% @shipped.each do |product| %>
-            <li>  
-              <%= link_to edit_admin_product_path(product[:product]) do %> 
-                
-                  <%= mini_image product[:product]%>
-
-                 <%= truncate(product[:product].name, escape: false,length: 10) %>
-                
-                
-                <span class="badge green"><%= product[:quantity]%></span>
-              <% end %>
-            </li>
-          <% end %>      
-          </ul>
-        </div>
+    <br>
+     <p style="font-size: x-large;"> Shipped: </p>
+     <table class="table table-hover">
+      <thead>
+        <tr>
+          <th class= "col-md-2">Dish Type</th>
+          <th>Product</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @dish_types.each do |dt| %>
+        <tr>
+          <td><%= link_to dt.try(:name), edit_admin_dish_type_path(dt) %></td>
+          <td> 
+            <div id="product-shipped">
+              <ul >
+              <% @shipped.each do |product| %>
+                <%if product[:product].dish_type == dt %>
+                  <li>  
+                    <%= link_to edit_admin_product_path(product[:product]) do %>  
+                        <%= mini_image product[:product]%>
+                       <%= truncate(product[:product].name, escape: false,length: 10) %>
+                      <span class="badge green"><%= product[:quantity]%></span>
+                    <% end %>
+                  </li>
+                <% end %> 
+              <% end %>      
+              </ul>
+            </div>
+            
+          </td>
+        </tr> 
+      <% end %>  
+      </tbody>
+    </table>
   <% end %>
 <% end %>
 <script type="text/javascript">
   var date = $('#fulfillment_date').attr("data");
   var s_m = $('#fulfillment_time').attr("data");
   var href = "/admin/orders/fulfillment_list";
-  console.log(s_m);
   $('#fulfillment_date').on('change', function() {
     date =this.value;
     href = "/admin/orders/fulfillment_list?fulfillment[date]="+date +"&fulfillment[time]="+s_m;

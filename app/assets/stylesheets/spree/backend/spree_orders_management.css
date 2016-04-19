@@ -17,14 +17,9 @@ the installer will append this file to the app vendored assets here: 'vendor/ass
 	height: 45px;
 	border-radius: 45px
 }
-
 table .th .tr{ text-align: center;}
-
-
-
-
 #product-shipped {
-	margin-top: 20px
+  margin-left: -40px;
 }
 #product-shipped ul {
   border-width: 1px;

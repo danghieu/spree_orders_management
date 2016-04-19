@@ -9,7 +9,7 @@ Spree::Admin::OrdersController.class_eval do
   end
 
   def load_order
-    @order = Spree::Order.includes(:shipments =>[:time_frame,:stock_location,:shipping_rates,:inventory_units => [:line_item,:variant ]],:payments =>[:payment_method]).friendly.find(params[:id])
+    @order = Spree::Order.includes(order_includes).friendly.find(params[:id])
     authorize! action, @order
   end
 
@@ -17,6 +17,7 @@ Spree::Admin::OrdersController.class_eval do
     @time = Dish::TimeFrame.all
     @date =  Date.today
     @s_m = @time.first
+    @dish_types = Dish::DishType.all
   end
 
   def fulfillment_list
@@ -72,11 +73,19 @@ Spree::Admin::OrdersController.class_eval do
   end
 
   def get_shipments(date,time,state)
-    @shipments = Spree::Shipment.where("time_frame_id=? and date_delivery=? and state= ?",time.id,date,state).includes(inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]])
+    @shipments = Spree::Shipment.where("time_frame_id=? and date_delivery=? and state= ?",time.id,date,state).includes(shipment_includes)
   end
 
   private
   def fulfill_params
     params.require(:fulfillment).permit(:date,:time)
+  end
+
+  def order_includes
+    [:shipments =>shipment_includes,:payments =>[:payment_method]]
+  end
+
+  def shipment_includes
+    [:time_frame,:stock_location,:shipping_rates,inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]]]
   end
 end
