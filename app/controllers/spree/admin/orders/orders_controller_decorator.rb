@@ -86,6 +86,6 @@ Spree::Admin::OrdersController.class_eval do
   end
 
   def shipment_includes
-    [:time_frame,:stock_location,:shipping_rates,inventory_units: [:line_item,:variant =>[:product=>[:ingredients => :images]]]]
+    [:time_frame,:stock_location,:shipping_rates,inventory_units: [:line_item,:variant =>[:product=>[:dish_type,:master => [:images],:ingredients => :images]]]]
   end
 end
